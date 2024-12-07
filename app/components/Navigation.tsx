@@ -71,31 +71,18 @@ export default function Navigation() {
                     <span className="sr-only">Open user menu</span>
                     <UserCircleIcon className="h-6 w-6" aria-hidden="true" />
                   </Menu.Button>
-                  <Menu.Items className="absolute right-0 z-10 mt-2 w-48 rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <Menu.Items className="absolute right-0 z-10 mt-2 w-48 rounded-md bg-gray-700 py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                     <Menu.Item>
                       {({ active }) => (
-                        <a
-                          href="#"
+                        <Link
+                          href="/profile"
                           className={classNames(
-                            active ? "bg-gray-100" : "",
-                            "block px-4 py-2 text-sm text-gray-700",
+                            active ? "bg-gray-700" : "",
+                            "block px-4 py-2 text-sm text-gray-100",
                           )}
                         >
                           Your Profile
-                        </a>
-                      )}
-                    </Menu.Item>
-                    <Menu.Item>
-                      {({ active }) => (
-                        <a
-                          href="#"
-                          className={classNames(
-                            active ? "bg-gray-100" : "",
-                            "block px-4 py-2 text-sm text-gray-700",
-                          )}
-                        >
-                          Settings
-                        </a>
+                        </Link>
                       )}
                     </Menu.Item>
                     <Menu.Item>
@@ -106,8 +93,8 @@ export default function Navigation() {
                             router.push("/login");
                           }}
                           className={classNames(
-                            active ? "bg-gray-100" : "",
-                            "block w-full text-left px-4 py-2 text-sm text-gray-700",
+                            active ? "bg-gray-700" : "",
+                            "block w-full text-left px-4 py-2 text-sm text-gray-100",
                           )}
                         >
                           Sign out
