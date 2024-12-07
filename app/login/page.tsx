@@ -28,23 +28,42 @@ export default function Login() {
     };
 
     try {
-      const response = await fetch("http://localhost:8000/api/login/", {
+      // Login request
+      const loginResponse = await fetch("http://localhost:8000/api/login/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(credentials),
       });
-
-      if (!response.ok) {
+  
+      if (!loginResponse.ok) {
         throw new Error("Login failed");
       }
-
-      const data = await response.json();
-      localStorage.setItem("token", data.access);
+  
+      const loginData = await loginResponse.json();
+      const token = loginData.access;
+      localStorage.setItem("token", token);
+  
+      // Fetch user ID
+      const userIdResponse = await fetch("http://localhost:8000/api/get_user_id/", {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+  
+      if (!userIdResponse.ok) {
+        throw new Error("Failed to fetch user ID");
+      }
+  
+      const userData = await userIdResponse.json();
+      localStorage.setItem("userId", userData.user_id);
+  
       router.push("/");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "An error occurred");
     } finally {
       setIsLoading(false);
     }
