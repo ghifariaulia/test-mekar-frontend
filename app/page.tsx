@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+
 import { UserCircleIcon } from "@heroicons/react/24/outline";
+import { useRouter } from "next/navigation";
 
 import Navigation from "./components/Navigation";
 
@@ -53,7 +54,7 @@ export default function Home() {
       } catch (error) {
         console.error("Error fetching users:", error);
         setError(
-          error instanceof Error ? error.message : "Failed to fetch users"
+          error instanceof Error ? error.message : "Failed to fetch users",
         );
         setUsers([]);
 

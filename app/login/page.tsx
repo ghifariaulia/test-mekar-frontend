@@ -36,31 +36,34 @@ export default function Login() {
         },
         body: JSON.stringify(credentials),
       });
-  
+
       if (!loginResponse.ok) {
         throw new Error("Login failed");
       }
-  
+
       const loginData = await loginResponse.json();
       const token = loginData.access;
       localStorage.setItem("token", token);
-  
+
       // Fetch user ID
-      const userIdResponse = await fetch("http://localhost:8000/api/get_user_id/", {
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json",
+      const userIdResponse = await fetch(
+        "http://localhost:8000/api/get_user_id/",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         },
-      });
-  
+      );
+
       if (!userIdResponse.ok) {
         throw new Error("Failed to fetch user ID");
       }
-  
+
       const userData = await userIdResponse.json();
       localStorage.setItem("userId", userData.user_id);
-  
+
       router.push("/");
     } catch (error) {
       setError(error instanceof Error ? error.message : "An error occurred");

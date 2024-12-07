@@ -47,9 +47,7 @@ export default function Register() {
       }
 
       const data = await response.json();
-      // Store token if your backend returns one
       localStorage.setItem("token", data.token);
-      // Redirect to login or dashboard
       router.push("/login");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed");

@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Navigation from "../components/Navigation";
+
 import { useRouter } from "next/navigation";
+
+import Navigation from "../components/Navigation";
 
 interface UserProfile {
   name: string;
@@ -35,7 +37,7 @@ export default function UserProfilePage() {
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
-          }
+          },
         );
 
         if (response.status === 401) {
@@ -53,7 +55,7 @@ export default function UserProfilePage() {
         setUser(data);
       } catch (error) {
         setError(
-          error instanceof Error ? error.message : "Error loading profile"
+          error instanceof Error ? error.message : "Error loading profile",
         );
       } finally {
         setLoading(false);
