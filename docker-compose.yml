@@ -1,0 +1,10 @@
+services:
+  test-mekar-frontend:
+    container_name: test-mekar-frontend
+    command: yarn start
+    build: ./
+    ports:
+      - 12000:3000
+    environment:
+      - PORT=3000
+    user: "0"
