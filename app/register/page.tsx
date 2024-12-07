@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface RegisterCredentials {
   name: string;
@@ -18,6 +19,63 @@ export default function Register() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
+  const validateName = (name: string): string | null => {
+    if (!name.trim()) return "Name is required";
+    if (name.length < 2) return "Name must be at least 2 characters";
+    if (!/^[a-zA-Z0-9\s]*$/.test(name)) return "Name can only contain letters, numbers, and spaces";
+    return null;
+  };
+  
+  const validateEmail = (email: string): string | null => {
+    if (!email.trim()) return "Email is required";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return "Invalid email format";
+    return null;
+  };
+  
+  const validatePassword = (password: string): string | null => {
+    if (!password) return "Password is required";
+    if (password.length < 8) return "Password must be at least 8 characters";
+    if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
+      return "Password must contain at least one uppercase letter, one lowercase letter, and one number";
+    }
+    return null;
+  };
+  
+  const validateIdentityNumber = (id: string): string | null => {
+    if (!id.trim()) return "Identity number is required";
+    if (!/^\d{16}$/.test(id)) return "Identity number must be 16 digits";
+    return null;
+  };
+  
+  const validateDateOfBirth = (dob: string): string | null => {
+    if (!dob) return "Date of birth is required";
+    const birthDate = new Date(dob);
+    const today = new Date();
+    const age = today.getFullYear() - birthDate.getFullYear();
+    if (age < 10) return "You must be at least 10 years old";
+    if (age > 120) return "Please enter a valid date of birth";
+    return null;
+  };
+  
+  const validateForm = (credentials: RegisterCredentials): string | null => {
+    const nameError = validateName(credentials.name);
+    if (nameError) return nameError;
+  
+    const emailError = validateEmail(credentials.email);
+    if (emailError) return emailError;
+  
+    const passwordError = validatePassword(credentials.password);
+    if (passwordError) return passwordError;
+  
+    const idError = validateIdentityNumber(credentials.identity_number);
+    if (idError) return idError;
+  
+    const dobError = validateDateOfBirth(credentials.date_of_birth);
+    if (dobError) return dobError;
+  
+    return null;
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
@@ -31,6 +89,12 @@ export default function Register() {
       identity_number: formData.get("identity_number") as string,
       date_of_birth: formData.get("date_of_birth") as string,
     };
+    const validationError = validateForm(credentials);
+    if (validationError) {
+      setError(validationError);
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const response = await fetch("http://localhost:8000/api/register/", {
@@ -60,9 +124,11 @@ export default function Register() {
       <div className="min-h-screen bg-gray-900">
         <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-            <img
+            <Image
               alt="Your Company"
               src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
+              width={48}
+              height={48}
               className="mx-auto h-10 w-auto"
             />
             <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-100">
