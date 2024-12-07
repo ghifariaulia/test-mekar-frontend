@@ -62,7 +62,7 @@ export default function UserProfilePage() {
     };
 
     fetchUserProfile();
-  }, []);
+  }, [router]);
 
   if (loading)
     return (

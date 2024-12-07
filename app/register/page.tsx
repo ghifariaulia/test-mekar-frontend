@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 
 interface RegisterCredentials {
   name: string;
@@ -22,16 +22,18 @@ export default function Register() {
   const validateName = (name: string): string | null => {
     if (!name.trim()) return "Name is required";
     if (name.length < 2) return "Name must be at least 2 characters";
-    if (!/^[a-zA-Z0-9\s]*$/.test(name)) return "Name can only contain letters, numbers, and spaces";
+    if (!/^[a-zA-Z0-9\s]*$/.test(name))
+      return "Name can only contain letters, numbers, and spaces";
     return null;
   };
-  
+
   const validateEmail = (email: string): string | null => {
     if (!email.trim()) return "Email is required";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return "Invalid email format";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      return "Invalid email format";
     return null;
   };
-  
+
   const validatePassword = (password: string): string | null => {
     if (!password) return "Password is required";
     if (password.length < 8) return "Password must be at least 8 characters";
@@ -40,13 +42,13 @@ export default function Register() {
     }
     return null;
   };
-  
+
   const validateIdentityNumber = (id: string): string | null => {
     if (!id.trim()) return "Identity number is required";
     if (!/^\d{16}$/.test(id)) return "Identity number must be 16 digits";
     return null;
   };
-  
+
   const validateDateOfBirth = (dob: string): string | null => {
     if (!dob) return "Date of birth is required";
     const birthDate = new Date(dob);
@@ -56,23 +58,23 @@ export default function Register() {
     if (age > 120) return "Please enter a valid date of birth";
     return null;
   };
-  
+
   const validateForm = (credentials: RegisterCredentials): string | null => {
     const nameError = validateName(credentials.name);
     if (nameError) return nameError;
-  
+
     const emailError = validateEmail(credentials.email);
     if (emailError) return emailError;
-  
+
     const passwordError = validatePassword(credentials.password);
     if (passwordError) return passwordError;
-  
+
     const idError = validateIdentityNumber(credentials.identity_number);
     if (idError) return idError;
-  
+
     const dobError = validateDateOfBirth(credentials.date_of_birth);
     if (dobError) return dobError;
-  
+
     return null;
   };
 
