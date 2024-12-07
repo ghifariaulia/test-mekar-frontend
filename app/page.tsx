@@ -33,13 +33,12 @@ export default function Home() {
         const response = await fetch("http://localhost:8000/api/users/", {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${token.replace(/"/g, "")}`, // Remove quotes if present
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         });
 
         if (response.status === 401) {
-          // Token expired or invalid
           localStorage.removeItem("token");
           router.push("/login");
           return;
@@ -58,7 +57,6 @@ export default function Home() {
         );
         setUsers([]);
 
-        // Handle connection errors
         if (error instanceof TypeError) {
           setError("Network error - please check your connection");
         }

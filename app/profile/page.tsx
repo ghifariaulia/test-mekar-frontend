@@ -41,7 +41,6 @@ export default function UserProfilePage() {
         );
 
         if (response.status === 401) {
-          // Token expired or invalid
           localStorage.removeItem("token");
           router.push("/login");
           return;

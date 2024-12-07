@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface LoginCredentials {
   email: string;
@@ -11,10 +12,9 @@ interface LoginCredentials {
 }
 
 export default function Login() {
-  // Add these state hooks
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter(); // Next.js router
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -28,7 +28,6 @@ export default function Login() {
     };
 
     try {
-      // Login request
       const loginResponse = await fetch("http://localhost:8000/api/login/", {
         method: "POST",
         headers: {
@@ -45,7 +44,6 @@ export default function Login() {
       const token = loginData.access;
       localStorage.setItem("token", token);
 
-      // Fetch user ID
       const userIdResponse = await fetch(
         "http://localhost:8000/api/get_user_id/",
         {
@@ -76,10 +74,12 @@ export default function Login() {
       <div className="min-h-screen bg-gray-900">
         <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-            <img
+            <Image
               alt="Your Company"
               src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
               className="mx-auto h-10 w-auto"
+              width={48}
+              height={48}
             />
             <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-100">
               Sign in to your account
