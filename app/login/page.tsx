@@ -1,27 +1,76 @@
+"use client";
+
+import { useState } from "react";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+interface LoginCredentials {
+  email: string;
+  password: string;
+}
 
 export default function Login() {
+  // Add these state hooks
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter(); // Next.js router
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+
+    const formData = new FormData(e.currentTarget);
+    const credentials: LoginCredentials = {
+      email: formData.get("email") as string,
+      password: formData.get("password") as string,
+    };
+
+    try {
+      const response = await fetch("http://localhost:8000/api/login/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credentials),
+      });
+
+      if (!response.ok) {
+        throw new Error("Login failed");
+      }
+
+      const data = await response.json();
+      localStorage.setItem("token", data.access);
+      router.push("/");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <>
-      <div className="min-h-screen bg-white">
-        <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-white">
+      <div className="min-h-screen bg-gray-900">
+        <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
             <img
               alt="Your Company"
               src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
               className="mx-auto h-10 w-auto"
             />
-            <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
+            <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-100">
               Sign in to your account
             </h2>
           </div>
 
           <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-            <form action="#" method="POST" className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
+              {error && <p className="text-red-500 text-sm/6">{error}</p>}
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm/6 font-medium text-gray-900"
+                  className="block text-sm/6 font-medium text-gray-100"
                 >
                   Email address
                 </label>
@@ -40,7 +89,7 @@ export default function Login() {
                 <div className="flex items-center justify-between">
                   <label
                     htmlFor="password"
-                    className="block text-sm/6 font-medium text-gray-900"
+                    className="block text-sm/6 font-medium text-gray-100"
                   >
                     Password
                   </label>
@@ -67,9 +116,10 @@ export default function Login() {
               <div>
                 <button
                   type="submit"
+                  disabled={isLoading}
                   className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
-                  Sign in
+                  {isLoading ? "Signing in..." : "Sign in"}
                 </button>
               </div>
             </form>
